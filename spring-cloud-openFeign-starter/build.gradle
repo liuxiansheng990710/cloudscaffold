@@ -1,0 +1,7 @@
+dependencies {
+    compileOnly "org.springframework:spring-context"
+    compileOnly "org.springframework.cloud:spring-cloud-starter-openfeign"
+    compileOnly "org.projectlombok:lombok"
+    compileOnly "cn.hutool:hutool-all"
+    annotationProcessor "org.projectlombok:lombok"
+}

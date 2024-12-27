@@ -1,0 +1,6 @@
+spring:
+  rabbitmq:
+    addresses: amqp://47.94.0.13:5672
+    username: 21
+    password: 21
+    virtual-host: vhost-beta

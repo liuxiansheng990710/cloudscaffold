@@ -1,0 +1,3 @@
+# OpenFeign Auto Configuration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
+com.example.cloud.openfeign.autoconfigure.OpenfeignAutoConfiguration

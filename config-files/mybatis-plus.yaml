@@ -1,0 +1,55 @@
+mybatis-plus:
+  configuration:
+    # 是否启用缓存。默认为true。
+    cache-enabled: false
+    # 默认的执行器类型。默认为reuse。
+    default-executor-type: reuse
+    # 当数据库字段值为null时，JDBC类型。默认为'null'。
+    jdbc-type-for-null: 'null'
+    # 是否启用延迟加载。默认为true。
+    lazy-loading-enabled: true
+    # 本地缓存的作用域。默认为session。
+    local-cache-scope: session
+    # 是否将下划线转换为驼峰形式。默认为true。
+    map-underscore-to-camel-case: true
+    # 默认的枚举类型处理器。
+    default-enum-type-handler: org.apache.ibatis.type.EnumTypeHandler
+
+  # Mapper文件的位置。使用Ant风格的路径匹配。
+  mapper-locations: classpath:mapper/**/*Mapper.xml
+
+  # 全局配置。
+  global-config:
+    # BaseMapper的全路径类名，作为所有Mapper接口的父接口。
+    # super-mapper-class: cn.wanxue.enhance.mybatisplus.mapper.BaseMapper
+
+    # 数据库相关的配置。
+    db-config:
+      # 主键ID生成策略。默认为assign_id。
+      id-type: assign_id
+      # 逻辑删除的值。默认为1。
+      logic-delete-value: 1
+      # 逻辑未删除的值。默认为0。
+      logic-not-delete-value: 0
+      # 插入时的字段策略。默认为not_null。
+      insert-strategy: not_null
+      # 更新时的字段策略。默认为not_null。
+      update-strategy: not_null
+      # 查询条件的策略。默认为not_empty。
+      where-strategy: not_empty
+      # 字段名格式化。默认为'`%s`'。
+      property-format: '`%s`'
+      # 列名格式化。默认为'`%s`'。
+      column-format: '`%s`'
+
+    # 是否启用启动时的Banner。默认为false。
+    banner: false
+
+  # 自定义的类型处理器所在的包名。
+  type-handlers-package: com.example.mybatisplus.enhance.typehandler.mysql
+
+  # 枚举类型所在的包名。
+  # type-enums-package: cn.wanxue.model.*.enums,cn.wanxue.commons.model.enums
+
+  # 默认的脚本语言驱动。
+  # default-scripting-language-driver: cn.wanxue.enhance.mybatisplus.MybatisPlusXMLLanguageDriver

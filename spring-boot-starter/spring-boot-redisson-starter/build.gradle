@@ -1,0 +1,10 @@
+dependencies {
+    api "org.redisson:redisson:3.20.0"
+
+    compileOnly "org.springframework.boot:spring-boot-autoconfigure"
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+    compileOnly "org.springframework.boot:spring-boot-starter-aop"
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+}

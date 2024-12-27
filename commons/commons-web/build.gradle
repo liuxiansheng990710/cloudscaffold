@@ -1,0 +1,27 @@
+dependencies {
+    //禁止向下core传递
+    compileOnly project(":commons:commons-core")
+    //此处仅为处理自定义异常才引入该包
+    compileOnly project(":spring-cloud-openFeign-starter")
+    compileOnly project(":spring-boot-starter:spring-boot-redisson-starter")
+    //公共依赖在commons-core中统一应用,此处依赖全部定义为私有
+    compileOnly "org.springframework:spring-context"
+    compileOnly "org.springframework.boot:spring-boot-starter"
+    //需要undertow创建bean
+    compileOnly "org.springframework.boot:spring-boot-starter-undertow"
+    //@ConfigurationPropertie所需依赖
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+    compileOnly "org.springframework.boot:spring-boot-starter-log4j2"
+    //alibaba依赖
+    compileOnly "com.alibaba:fastjson"
+    //第三方依赖
+    compileOnly "cn.hutool:hutool-all"
+    compileOnly "com.baomidou:mybatis-plus-boot-starter"
+    //webmvc依赖
+    compileOnly "org.springframework.boot:spring-boot-starter-web"
+    compileOnly "org.springframework:spring-web"
+    compileOnly "org.springframework:spring-webmvc"
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+}

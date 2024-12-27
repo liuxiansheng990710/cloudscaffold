@@ -1,0 +1,60 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin/' }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/spring/' }
+        maven { url 'https://plugins.gradle.org/m2' }
+        maven { url 'https://repo.spring.io/release' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'cloudScaffold'
+//-----------------------------------------------微服务---------------------------------------------------------//
+include 'provider'
+include 'provider:provider-base'
+findProject(':provider:provider-base')?.name = 'provider-base'
+include 'provider:provider-auth'
+findProject(':provider:provider-auth')?.name = 'provider-auth'
+include 'provider:provider-quartz'
+findProject(':provider:provider-quartz')?.name = 'provider-quartz'
+//-----------------------------------------------RPC---------------------------------------------------------//
+include 'provider-api'
+include 'provider-api:provider-api-base'
+findProject(':provider-api:provider-api-base')?.name = 'provider-api-base'
+include 'provider-api:provider-api-auth'
+findProject(':provider-api:provider-api-auth')?.name = 'provider-api-auth'
+include 'provider-api:provider-api-quartz'
+findProject(':provider-api:provider-api-quartz')?.name = 'provider-api-quartz'
+//-----------------------------------------------微服务starter---------------------------------------------------------//
+include 'spring-cloud-openFeign-starter'
+include 'spring-cloud-sentinel-starter'
+include 'spring-cloud-provider-starter'
+include 'spring-cloud-third-starter:mybatis-plus-enhance'
+findProject(':spring-cloud-third-starter:mybatis-plus-enhance')?.name = 'mybatis-plus-enhance'
+//-----------------------------------------------springBoot starter---------------------------------------------------------//
+include 'spring-boot-starter'
+include 'spring-boot-starter:spring-boot-cache-starter'
+findProject(':spring-boot-starter:spring-boot-cache-starter')?.name = 'spring-boot-cache-starter'
+include 'spring-boot-starter:spring-boot-redisson-starter'
+findProject(':spring-boot-starter:spring-boot-redisson-starter')?.name = 'spring-boot-redisson-starter'
+//-----------------------------------------------公共组件---------------------------------------------------------//
+include 'commons'
+include 'commons:commons-core'
+findProject(':commons:commons-core')?.name = 'commons-core'
+include 'commons:commons-web'
+findProject(':commons:commons-web')?.name = 'commons-web'
+include 'database-check'
+//-----------------------------------------------实体---------------------------------------------------------//
+include 'entities'
+include 'entities:base-entity'
+findProject(':entities:base-entity')?.name = 'base-entity'
+include 'entities:auth-entity'
+findProject(':entities:auth-entity')?.name = 'auth-entity'
+include 'entities:quartz-entity'
+findProject(':entities:quartz-entity')?.name = 'quartz-entity'
+//-----------------------------------------------网关---------------------------------------------------------//
+include 'gateway'
+

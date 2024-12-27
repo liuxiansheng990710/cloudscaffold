@@ -1,0 +1,7 @@
+sentinel:
+  authority:
+    origin: authOrigin
+    strategy: 0
+    limitApp:
+      - app1
+      - a12

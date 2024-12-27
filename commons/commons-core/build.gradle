@@ -1,0 +1,52 @@
+dependencies {
+
+    //-----------------------------------------------------公共依赖---------------------------------------------------------//
+    //autoconfigure包含spring-context和spring-core
+    api "org.springframework.boot:spring-boot-autoconfigure"
+    api "org.springframework.boot:spring-boot-starter"
+    //异步Async依赖不在autoconfigure下context中
+    api "org.springframework:spring-context"
+    //需要undertow创建bean
+    api "org.springframework.boot:spring-boot-starter-undertow"
+    //@ConfigurationPropertie所需依赖
+    api "org.springframework.boot:spring-boot-configuration-processor"
+    //nacos依赖
+    api "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+    api "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
+    //sentinel依赖
+    api "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel"
+    //openfeign
+    api "org.springframework.cloud:spring-cloud-starter-openfeign"
+    //日志
+    api "org.springframework.boot:spring-boot-starter-log4j2"
+    api "com.lmax:disruptor"
+    //openapi文档
+    api "com.github.xiaoymin:knife4j-openapi3-spring-boot-starter"
+    //alibaba依赖
+    api "com.alibaba:fastjson"
+    api "com.alibaba:transmittable-thread-local"
+    //第三方依赖
+    api "cn.hutool:hutool-all"
+    api "org.apache.commons:commons-lang3"
+    api "org.modelmapper:modelmapper"
+    api "com.google.guava:guava"
+    //自定义yml参数映射
+    api "org.springframework.boot:spring-boot-starter-actuator"
+    api "org.springframework.boot:spring-boot-starter-aop"
+    // rabbitmq依赖(基于spring-cloud-stream)
+    api "org.springframework.cloud:spring-cloud-starter-stream-rabbit"
+    //okhttp3
+    api "com.squareup.okhttp3:okhttp"
+    api "com.squareup.okhttp3:logging-interceptor"
+    api "org.springframework.cloud:spring-cloud-starter-sleuth"
+    //hikari链接
+    api "com.zaxxer:HikariCP"
+
+    //-----------------------------------------------------私有依赖---------------------------------------------------------//
+    compileOnly "com.fasterxml.jackson.core:jackson-databind"
+    compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    compileOnly "p6spy:p6spy"
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+}

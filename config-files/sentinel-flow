@@ -1,0 +1,18 @@
+[
+  {
+    "resource": "/v1/base-test-add",
+    "count": 2,
+    "grade": 1,
+    "strategy": 0,
+    "controlBehavior": 0,
+    "limitApp": "default"
+  },
+  {
+    "resource": "/v2/base-test-add",
+    "count": 2,
+    "grade": 1,
+    "strategy": 0,
+    "controlBehavior": 0,
+    "limitApp": "default"
+  }
+]

@@ -1,0 +1,87 @@
+{
+  "groups": [
+    {
+      "name": "spring.cache.multi",
+      "type": "com.example.spring.boot.cache.properties.MultiCacheConfigProperties",
+      "sourceType": "com.example.spring.boot.cache.properties.MultiCacheConfigProperties"
+    },
+    {
+      "name": "spring.cache.multi.defaultCacheConfig",
+      "type": "com.example.spring.boot.cache.config.RedissonCaffeineCacheConfig",
+      "sourceType": "com.example.spring.boot.cache.config.RedissonCaffeineCacheConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.cache.multi.dynamic",
+      "type": "java.lang.Boolean",
+      "description": "是否根据cacheName动态创建Cache",
+      "sourceType": "com.example.spring.boot.cache.properties.MultiCacheConfigProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.cache.multi.lockLeaseTime",
+      "type": "java.lang.Long",
+      "description": "锁的租赁时间(单位毫秒)",
+      "sourceType": "com.example.spring.boot.cache.properties.MultiCacheConfigProperties",
+      "defaultValue": 1000
+    },
+    {
+      "name": "spring.cache.multi.cacheConfig",
+      "type": "java.lang.String",
+      "description": "配置文件路径",
+      "sourceType": "com.example.spring.boot.cache.properties.MultiCacheConfigProperties",
+      "defaultValue": "classpath:cache-config.json"
+    },
+    {
+      "name": "spring.cache.multi.topic",
+      "type": "java.lang.String",
+      "description": "缓存更新时通知其他节点的topic名称",
+      "sourceType": "com.example.spring.boot.cache.properties.MultiCacheConfigProperties",
+      "defaultValue": "cache:caffeine:redisson:topic"
+    },
+    {
+      "name": "spring.cache.multi.defaultCacheConfig.vagueEvict",
+      "type": "java.lang.Boolean",
+      "description": "是否支持模糊清理，当缓存KEY为String并且KEY中包含'*'，以及该字段设置为true时模糊清理才会生效",
+      "sourceType": "com.example.spring.boot.cache.config.RedissonCaffeineCacheConfig",
+      "defaultValue": false
+    },
+    {
+      "name": "spring.cache.multi.defaultCacheConfig.allowNullValues",
+      "type": "java.lang.Boolean",
+      "description": "是否允许缓存null值（作用于缓存穿透）",
+      "sourceType": "com.example.spring.boot.cache.config.RedissonCaffeineCacheConfig",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.cache.multi.defaultCacheConfig.multiLevelCache",
+      "type": "java.lang.Boolean",
+      "description": "是否开启多级缓存",
+      "sourceType": "com.example.spring.boot.cache.config.RedissonCaffeineCacheConfig",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.cache.multi.defaultCacheConfig.clone",
+      "type": "java.lang.Boolean",
+      "description": "是否开启克隆（获取到克隆后的缓存对象 不直接操作原缓存对象） 只针对一级缓存",
+      "sourceType": "com.example.spring.boot.cache.config.RedissonCaffeineCacheConfig",
+      "defaultValue": false
+    },
+    {
+      "name": "spring.cache.multi.defaultCacheConfig.initialCapacity",
+      "type": "java.lang.Integer",
+      "description": "一级缓存初始化大小",
+      "sourceType": "com.example.spring.boot.cache.config.RedissonCaffeineCacheConfig",
+      "defaultValue": 20
+    },
+    {
+      "name": "spring.cache.multi.defaultCacheConfig.maximumSize",
+      "type": "java.lang.Long",
+      "description": "最大缓存对象个数，超过此数量时之前放入的缓存将失效",
+      "sourceType": "com.example.spring.boot.cache.config.RedissonCaffeineCacheConfig",
+      "defaultValue": 1000
+    }
+  ],
+  "hints": []
+}

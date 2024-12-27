@@ -1,0 +1,20 @@
+dependencies {
+    api project(":spring-cloud-openFeign-starter")
+    api project(":spring-cloud-sentinel-starter")
+    api project(":commons:commons-core") {
+        configurations.all {
+            exclude group: 'org.springframework', module: 'spring-webmvc'
+        }
+    }
+
+    //网关依赖
+    api "org.springframework.cloud:spring-cloud-starter-gateway"
+    //整合网关限流
+    api "com.alibaba.cloud:spring-cloud-alibaba-sentinel-gateway"
+    api "org.springframework.boot:spring-boot-starter-webflux"
+    //路由负载均衡使用loadbalancer
+    api "org.springframework.cloud:spring-cloud-starter-loadbalancer"
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+}

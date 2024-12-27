@@ -1,0 +1,6 @@
+{
+ "users": {
+   "ttl": 60000,
+   "maxIdleTime": 60000
+ }
+}

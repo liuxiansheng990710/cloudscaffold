@@ -1,0 +1,6 @@
+dependencies {
+    api project(":spring-cloud-third-starter:mybatis-plus-enhance")
+
+    api "com.baomidou:mybatis-plus-boot-starter"
+    compileOnly "com.github.xiaoymin:knife4j-openapi3-spring-boot-starter"
+}

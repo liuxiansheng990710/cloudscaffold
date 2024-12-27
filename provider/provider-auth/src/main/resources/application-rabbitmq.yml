@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    stream:
+      # 生产者未注册为bean,所以这里主动注册（为通道拦截时，可以获取beanName）
+      output-bindings: 21-alpha-test;21-alpha-delay-test;
+      bindings:
+        21-alpha-test-out-0:
+          destination: test-topic
+        21-alpha-delay-test-out-0:
+          destination: delay-test-topic
+      rabbit:
+        bindings:
+          21-alpha-delay-test-out-0:
+            producer:
+              # 延迟队列交换机
+              delayed-exchange: true

@@ -1,0 +1,50 @@
+{
+  "groups": [
+    {
+      "name": "redisson",
+      "type": "com.example.spring.boot.redisson.properties.RedissonProperties",
+      "sourceType": "com.example.spring.boot.redisson.properties.RedissonProperties"
+    },
+    {
+      "name": "redisson.klock",
+      "type": "com.example.spring.boot.redisson.properties.KlockConfig",
+      "sourceType": "com.example.spring.boot.redisson.properties.KlockConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "redisson.config",
+      "type": "java.lang.String",
+      "description": "配置文件",
+      "sourceType": "com.example.spring.boot.redisson.properties.RedissonProperties"
+    },
+    {
+      "name": "redisson.enable",
+      "type": "java.lang.Boolean",
+      "description": "开关",
+      "sourceType": "com.example.spring.boot.redisson.properties.RedissonProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "redisson.reactive.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Reactive开关",
+      "defaultValue": false
+    },
+    {
+      "name": "redisson.klock.waitTime",
+      "type": "java.lang.Long",
+      "description": "尝试加锁，最多等待时间",
+      "sourceType": "com.example.spring.boot.redisson.properties.KlockConfig",
+      "defaultValue": 0
+    },
+    {
+      "name": "redisson.klock.leaseTime",
+      "type": "java.lang.Long",
+      "description": "上锁以后xxx秒自动解锁",
+      "sourceType": "com.example.spring.boot.redisson.properties.KlockConfig",
+      "defaultValue": 5
+    }
+  ],
+  "hints": []
+}

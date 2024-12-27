@@ -1,0 +1,25 @@
+{
+  "singleServerConfig": {
+    "idleConnectionTimeout": 10000,
+    "connectTimeout": 5000,
+    "timeout": 6000,
+    "pingConnectionInterval": 3000,
+    "retryAttempts": 0,
+    "subscriptionsPerConnection": 5,
+    "clientName": null,
+    "address": "redis://47.120.38.241:6379",
+    "password": "fuck_COM_520",
+    "subscriptionConnectionMinimumIdleSize": 1,
+    "subscriptionConnectionPoolSize": 25,
+    "connectionMinimumIdleSize": 1,
+    "connectionPoolSize": 10,
+    "database": 1,
+    "dnsMonitoringInterval": 5000
+  },
+  "threads": 5,
+  "nettyThreads": 10,
+  "codec": {
+    "class": "org.redisson.codec.JsonJacksonCodec"
+  },
+  "transportMode": "NIO"
+}

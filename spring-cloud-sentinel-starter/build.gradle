@@ -1,0 +1,13 @@
+dependencies {
+
+    compileOnly "org.springframework:spring-web"
+    compileOnly "org.springframework:spring-webmvc"
+    compileOnly "org.springframework.boot:spring-boot-starter-undertow"
+    compileOnly "org.springframework.boot:spring-boot-starter"
+    compileOnly "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel"
+    compileOnly "com.alibaba.csp:sentinel-datasource-nacos"
+    compileOnly "org.springframework.boot:spring-boot-starter-log4j2"
+    api "com.alibaba.csp:sentinel-logging-slf4j"
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+}

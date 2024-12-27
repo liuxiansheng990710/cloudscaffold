@@ -1,0 +1,27 @@
+[
+  {
+    "": "这是个注释",
+    "resource": "资源名称",
+    "count": "阈值，用户设置",
+    "grade": "阈值类型，默认0（0:线程数，1:QPS）",
+    "strategy": "流控模式，默认0。0:直接 1:关联 2:链路",
+    "controlBehavior": "流控效果，默认0。0:快速失败 1:预热模式 2:排队等待 3:预热+排队等待",
+    "limitApp": "限制的调用来源（必填，子类构造器无法传入，这里是个坑）"
+  },
+  {
+    "resource": "/v1/base-test-add",
+    "count": 2,
+    "grade": 1,
+    "strategy": 0,
+    "controlBehavior": 0,
+    "limitApp": "default"
+  },
+  {
+    "resource": "/v2/base-test-add",
+    "count": 2,
+    "grade": 1,
+    "strategy": 0,
+    "controlBehavior": 0,
+    "limitApp": "default"
+  }
+]

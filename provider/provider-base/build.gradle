@@ -1,0 +1,13 @@
+dependencies {
+    api project(":provider")
+    api project(":provider-api:provider-api-base")
+    api project(":provider-api:provider-api-auth")
+    api project(":entities:base-entity")
+
+    implementation 'org.mapstruct:mapstruct'
+    annotationProcessor 'org.mapstruct:mapstruct-processor'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding'
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+}

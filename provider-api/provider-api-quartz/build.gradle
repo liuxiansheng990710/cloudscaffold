@@ -1,0 +1,5 @@
+dependencies {
+    api project(":provider-api")
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+}

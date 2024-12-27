@@ -1,0 +1,222 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+import java.nio.file.Files
+
+import static java.io.File.separator
+import static java.util.Objects.equals
+
+plugins {
+    id 'org.springframework.boot' version "${springBootVersion}" apply(false)
+    id 'io.spring.dependency-management' version "1.0.14.RELEASE" apply(false)
+    id 'com.palantir.docker' version "0.34.0" apply(false)
+}
+
+ext {
+    configuration = [
+            javaVersion = JavaVersion.VERSION_11
+    ]
+    profile = "alpha"
+    dockerVersion = 'latest'
+}
+
+def loadGroovyConfig(profile) {
+    def configFilePath = file('config.groovy')
+    //TODO 报红 但是不影响正常运行 原因有待探究
+    return new ConfigSlurper(profile).parse(configFilePath.toURI().toURL()).toProperties()
+}
+
+//主要解决out文件下application.yml文件变量无法获取问题
+static def copyResources(Iterable<File> dirs) {
+    //${separator}为文件分隔符(Unix-like 系统上为 /,Windows 上为 \)  例：SRC_MAIN_RESOURCES=src/main/resources
+    final String SRC_MAIN_RESOURCES = "src${separator}main${separator}resources"
+    final String BUILD_RESOURCES_MAIN = "build${separator}resources${separator}main"
+    final String OUT_PRODUCTION_RESOURCES = "out${separator}production${separator}resources"
+    final String APPLICATION_YML = "${separator}application.yml"
+    for (def dir in dirs) {
+        //获取需要复制文件的绝对路径,替换为build/resources/main/application.yml
+        File file = new File(dir.getAbsolutePath().replace(SRC_MAIN_RESOURCES, BUILD_RESOURCES_MAIN) + APPLICATION_YML as String)
+        if (file.exists()) {
+            //将build下的application.yml替换到out下
+            def outPath = file.getAbsolutePath().replace(BUILD_RESOURCES_MAIN, OUT_PRODUCTION_RESOURCES)
+            File outFile = new File(outPath)
+            //删除原out下的application文件
+            outFile.delete()
+            //获取outFile父级目录
+            def parentFile = outFile.getParentFile()
+            if (!parentFile.exists()) {
+                //如果被删除 则手动创建
+                parentFile.mkdirs()
+            }
+            //复制文件
+            Files.copy(file.toPath(), outFile.toPath())
+        }
+    }
+
+}
+
+static def isWeb(title) {
+    (title.startsWith("provider") && !title.startsWith("provider-api") && !equals(title, "provider")) || equals(title, "gateway")
+}
+
+//解决首次构建时项目时 注释解析为GBK问题
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+allprojects {
+    apply plugin: 'maven-publish'
+    group = 'com.example'
+    version = '1.0'
+}
+
+description = "21Cloud脚手架"
+
+subprojects { subproject ->
+
+    apply plugin: 'java-library'
+    apply plugin: "io.spring.dependency-management"
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    processResources {
+        from(sourceSets.main.resources.srcDirs) {
+            include('**/*.yml')
+            filter(ReplaceTokens, tokens: loadGroovyConfig(profile))
+        }
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+
+    task("copyResources") {
+        //processResources(替换文件中的变量)任务执行完毕后,执行以下方法,将src/main/resources传入下一任务中
+        dependsOn processResources as Task
+        def dirs = sourceSets.main.resources.srcDirs
+        copyResources(dirs as Iterable<File>)
+    }
+
+    if (isWeb(subproject.name)) {
+        // 应用Palantir的Docker插件，这样可以在Gradle中构建Docker镜像
+        apply plugin: 'com.palantir.docker'
+        // 应用Spring Boot插件，以支持Spring Boot应用的构建打包
+        apply plugin: 'org.springframework.boot'
+
+        // 配置bootJar任务，这是Spring Boot插件的一部分，用于打包可执行的jar
+        bootJar {
+            // jar名字与版本号
+            archiveBaseName.set(subproject.name as String)
+            archiveVersion.set("")
+        }
+
+        def dockerName = "registry.cn-heyuan.aliyuncs.com/21cloud/${subproject.name}:${dockerVersion}"
+
+        docker {
+            copySpec.from("${project.getRootDir().toString()}/micro-conf").into("docker-workspace")
+            //手动调用build 在docker构建镜像之前完成
+            dependsOn build as Task
+            name dockerName
+            // 拉取最新基础镜像
+            pull true
+            files bootJar.archiveFile
+            // 使用子项目中的Dockerfile来构建镜像
+            dockerfile file("${project.projectDir.toString()}/Dockerfile")
+            //构建参数用于dockerfile
+            buildArgs([
+                    // 获取bootJar任务的输出文件名称
+                    'JAR_FILE'     : "${bootJar.archiveFileName.getOrNull()}",
+                    'WORKSPACE_DIR': "docker-workspace"
+            ])
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/spring/' }
+        maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://maven.youzanyun.com/repository/maven-public/" }
+        maven { url 'https://repo.spring.io/release' }
+        mavenCentral()
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+            mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
+            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAlibabaVersion}"
+        }
+        dependencies {
+            dependency("org.springframework.boot:spring-boot-starter:${springBootVersion}") {
+                exclude("org.springframework.boot:spring-boot-starter-logging")
+            }
+            dependency("org.springframework.boot:spring-boot-starter-web:${springBootVersion}") {
+                //使用undertow容器替换tomcat
+                exclude("org.springframework.boot:spring-boot-starter-tomcat")
+            }
+            dependency("org.projectlombok:lombok:1.18.24")
+            dependency("cn.hutool:hutool-all:5.8.4")
+            dependency("com.baomidou:mybatis-plus-boot-starter:3.5.3.1")
+            //动态数据源(基于Mybatis-plus)
+            dependency("com.baomidou:dynamic-datasource-spring-boot-starter:3.6.1")
+            dependency("mysql:mysql-connector-java:5.1.49")
+            dependency("org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}") {
+                exclude("org.apache.tomcat:tomcat-jdbc")
+            }
+            dependency("org.springframework.boot:spring-boot-starter-data-jdbc:${springBootVersion}")
+            dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-seata:${springCloudAlibabaVersion}") {
+                exclude("io.seata:seata-all")
+                //使用原生官网版本seata
+                exclude("io.seata:seata-spring-boot-starter")
+            }
+            dependency("io.seata:seata-spring-boot-starter:1.5.2") {
+                exclude("com.alibaba:druid")
+            }
+            //自定义使用gateway3.1.6 解决spring-cloud-dependencies-gateway版本管理冲突
+            dependency("org.springframework.cloud:spring-cloud-starter-gateway:3.1.6")
+            dependency("org.springframework.cloud:spring-cloud-gateway-server:3.1.6")
+            //解决gradle构建druidError提示
+            dependency("com.alibaba:druid:1.2.8")
+            //日志打印 disruptor处理日志AsyncLogger异步打印
+            dependency("p6spy:p6spy:3.9.1")
+            dependency("org.springframework.boot:spring-boot-starter-log4j2:${springBootVersion}")
+            dependency("com.lmax:disruptor:3.4.4")
+            //解决sentinel日志问题（启动info无法剔除  写入file太多）
+            dependency("com.alibaba.csp:sentinel-logging-slf4j:1.8.6")
+            //定时任务
+            dependency("org.quartz-scheduler:quartz:2.3.2") {
+                // 剔除c3p0连接池
+                exclude("com.mchange:c3p0")
+            }
+            dependency("com.alibaba:fastjson:1.2.83")
+            //jackson依赖
+            dependency("com.fasterxml.jackson.core:jackson-databind:2.13.3")
+            dependency("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3")
+            //阿里巴巴线程池增强器
+            dependency("com.alibaba:transmittable-thread-local:2.12.6")
+            //工具类
+            dependency("org.apache.commons:commons-lang3:3.12.0")
+            //redisson
+            dependency("org.redisson:redisson:3.20.0")
+            dependency("com.github.ben-manes.caffeine:caffeine:3.1.8")
+            dependency("org.springframework.boot:spring-boot-actuator:${springBootVersion}")
+            //modelMapper
+            dependency("org.modelmapper:modelmapper:2.4.5")
+            // mapstruct
+            dependency("org.mapstruct:mapstruct:1.5.1.Final")
+            dependency("org.mapstruct:mapstruct-processor:1.5.1.Final")
+            dependency("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+            // okhttp3
+            dependency("com.squareup.okhttp3:okhttp:3.12.13")
+            dependency("com.squareup.okhttp3:logging-interceptor:3.12.13")
+            //openapi 如果不需要knife1j增强 用下面这两个就行
+//            dependency("org.springdoc:springdoc-openapi-ui:1.7.0")
+//            dependency("com.github.xiaoymin:knife4j-openapi3-ui:4.5.0")
+            //为使用knife4j增强 所以选用starter
+            dependency("com.github.xiaoymin:knife4j-openapi3-spring-boot-starter:4.5.0")
+            // guava依赖
+            dependency("com.google.guava:guava:33.0.0-jre")
+        }
+
+    }
+}

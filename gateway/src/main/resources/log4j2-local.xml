@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--status，这个用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，你会看到log4j2内部各种详细输出。-->
+<!--monitorInterval：Log4j2能够自动检测修改配置 文件和重新配置本身，设置间隔秒数。-->
+<!--off：关闭lo4j的内部所有日志信息 -->
+<Configuration status="off" monitorInterval="600">
+    <properties>
+        <!--通用变量-->
+        <!-- pid为进程id-->
+        <Property name="PID">????</Property>
+        <!--%xwEx是一个转换符，用于在日志中输出异常信息（出现异常日志时，可以通过其显示异常的类型、消息以及堆栈跟踪） -->
+        <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
+        <!--%5p：表示输出日志级别，并通过 5p 的格式化指示符将其限制为至少为5个字符的长度。这样可以确保输出的日志级别在不同级别之间具有一致的宽度 -->
+        <!--放置在CONSOLE_LOG_PATTERN日志模式的开头，表示在每条日志的一行中显示日志级别 -->
+        <Property name="LOG_LEVEL_PATTERN">%5p</Property>
+        <Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd HH:mm:ss,SSS</Property>
+        <!--%clr 是一个用于给文本添加颜色的引导符号，文本颜色会根据 "LOG_LEVEL_PATTERN" 属性来决定 -->
+        <!--%d 表示输出日期和时间的转换符，{faint} 是一个颜色修饰符，表示以淡色显示 -->
+        <!--${sys:PID} 是一个引用系统属性的方式，表示输出的颜色和文本会根据系统属性 "PID" 来决定。在这个配置中，属性 "PID" 会被设置为进程的ID -->
+        <!--{-} 表示输出一个连字符，并以淡色显示 -->
+        <!--%t 表示输出线程名称的转换符。[%style{%t}{bright,blue}] 表示输出线程名称，并以明亮蓝色显示 -->
+        <!--%-c{1.} 表示输出日志类的名称，并限制只显示类名的第一个字符（带有一点后缀）。%clr{%-c{1.}}{cyan} 表示输出日志类名称的第一个字符，并以青色显示 -->
+        <!--%m 表示输出日志消息的转换符，%n 表示输出一个换行符，用于分隔不同的日志条目 -->
+        <!--输出系统属性 "LOG_EXCEPTION_CONVERSION_WORD" 的值。该属性在之前定义时被设置为 %xwEx，表示在日志中输出异常信息 -->
+        <Property name="CONSOLE_LOG_PATTERN">%clr{${LOG_LEVEL_PATTERN}} %clr{%d{${LOG_DATEFORMAT_PATTERN}}}{faint} %clr{${sys:PID}}{magenta} %clr{-}{faint} [%X{traceId}] %clr{-}{faint} [%style{%t}{bright,blue}] %clr{%-c{1.}}{cyan} %clr{(%F:%L)}{faint} %clr{-}{faint} %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
+    </properties>
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <Filters>
+                <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <!--输出日志的格式-->
+            <PatternLayout pattern="${CONSOLE_LOG_PATTERN}"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <!--AsyncLogger-->
+        <AsyncLogger name="com.example" level="INFO" includeLocation="true"/>
+        <AsyncLogger name="com.example.commons.core.utils.OkHttpUtils" level="DEBUG" includeLocation="true"/>
+        <AsyncLogger name="com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder" level="ERROR" includeLocation="true"/>
+        <AsyncLogger name="org.reflections.Reflections" level="ERROR" includeLocation="true"/>
+        <!--异步根节点配置，打印CONSOLE中wran的日志 -->
+        <AsyncRoot level="WARN" includeLocation="true">
+            <appender-ref ref="CONSOLE"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

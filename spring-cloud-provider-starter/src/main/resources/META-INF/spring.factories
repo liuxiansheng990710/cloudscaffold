@@ -1,0 +1,6 @@
+# Auto Configure 告诉 Spring Boot 自动加载指定的自动配置类
+# Spring Boot 的自动配置机制是基于条件注解的，它会根据应用的依赖和配置来自动配置应用的环境
+# 将特定的自动配置类添加到 EnableAutoConfiguration 属性中时，Spring Boot 在启动时会自动加载这些配置类，并根据条件（类上的注解）来决定是否将它们应用到应用程序中
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.example.cloud.provider.autoconfigure.ProviderAutoConfiguration,\
+com.example.cloud.provider.autoconfigure.OpenApiAutoConfiguration

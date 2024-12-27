@@ -1,0 +1,98 @@
+server:
+  port: 2103
+
+spring:
+  application:
+    name: provider-quartz
+  profiles:
+    active: @profile@
+
+  config:
+    import:
+      - application-${spring.profiles.active}.yml
+      - application-rabbitmq.yml
+      - optional:nacos:sentinel-config.yaml
+      - optional:nacos:mybatis-plus.yaml
+
+  datasource:
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    hikari:
+      #是否自动提交事务
+      auto-commit: true
+      #连接超时时间（理论上要小于网关超时时间）
+      connection-timeout: 900
+      #连接的空闲超时时间。如果连接在一段时间内没有被使用（空闲），则会被连接池关闭
+      idle-timeout: 50000
+      #获取连接的超时时间
+      login-timeout: 5
+      #连接池中的最长生命周期
+      max-lifetime: 600000
+      #Quartz 使用了一个行级锁机制来确保集群中的多个节点之间的任务调度不会冲突，无法在只读事务中执行语句  所以此处关闭只读
+      read-only: false
+      #连接池的验证超时时间（有时候连接在空闲一段时间后可能会失效，比如数据库重启或网络故障等原因。为了确保从连接池中获取的连接仍然有效，对连接进行验证）
+      validation-timeout: 3000
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: @nacos.addr@
+        group: @nacos.group@
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+
+    sentinel:
+      transport:
+        dashboard: @sentinel.dashboard@
+      #使用QPS链路规则时，需要将链路生成隐藏置为false
+      web-context-unify: false
+      filter:
+        #只对/v1的接口生效
+        url-patterns: @sentinel.filterUrl@
+
+  cache:
+    multi:
+      topic: ${spring.application.name}:cache:caffeine:redisson:topic
+      defaultCacheConfig:
+        multiLevelCache: false
+
+  #因为使用p6spy自动打印日志，所以关闭sleuth打印（解决sql日志打印两次问题）
+  sleuth:
+    jdbc:
+      p6spy:
+        enabled: false
+
+feign:
+  sentinel:
+    enabled: true
+
+mybatis-plus:
+  type-aliases-package: com.example.model.quartz
+
+seata:
+  application-id: ${spring.application.name}
+  #事务分组 与 nacos配置中对应
+  tx-service-group: default
+  service:
+    vgroup-mapping:
+      # 此处Key对应 tx-service-group 的 Value 也与nacos配置对应
+      default: default
+    grouplist:
+      default: @seata.addr@
+  client:
+    rm:
+      # 暂时关闭seata自查表元数据
+      table-meta-check-enable: false
+
+knife4j:
+  enable: true
+  basic:
+    enable: true
+    username: @knife4j.username@
+    password: @knife4j.password@
+
+redisson:
+  enable: true
+  config: @redisson.config@
+
+logging:
+  config: classpath:log4j2-local.xml

@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+System.setProperty("check.enable", "true")
+
+def modules = ["auth", "base", "quartz"]
+def properties = System.properties
+def moduleName = null
+
+java.util.Optional.ofNullable(properties.getOrDefault("checked.service.name", "")).ifPresent(name -> {
+    //这里传all或者单个服务进来 jenkins调用时候循环吧~ 代码内循环有问题
+    if (name.toString().contains("provider-")) {
+        moduleName = name.toString().replaceAll("provider-", "")
+        properties.put("module.name", moduleName)
+        modules = [moduleName]
+    }
+})
+
+
+dependencies {
+    //添加需要检测服务的实体
+    compileOnly project(":entities")
+    modules.forEach({module ->
+        String entityProject = ":entities:" + module + "-entity"
+        api project(entityProject)
+    })
+
+    api project(":commons:commons-core")
+    api "p6spy:p6spy"
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+    implementation 'org.mapstruct:mapstruct'
+    annotationProcessor 'org.mapstruct:mapstruct-processor'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding'
+
+    implementation "org.springframework.boot:spring-boot"
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation "mysql:mysql-connector-java"
+    implementation "org.springframework:spring-core"
+}
+
+run {
+    //设置运行参数
+    systemProperties System.properties
+}
+
+application {
+    mainClass.set("com.example.DataBaseCheckApplication")
+}

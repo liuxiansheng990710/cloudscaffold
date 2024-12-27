@@ -1,0 +1,68 @@
+server:
+  port: 2100
+
+spring:
+  application:
+    name: api-gateway
+  profiles:
+    active: @profile@
+
+  config:
+    import:
+      - application-${spring.profiles.active}.yml
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: @nacos.addr@
+        group: @nacos.group@
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        import-check:
+          enabled: false
+
+    sentinel:
+      transport:
+        dashboard: @sentinel.dashboard@
+      #使用QPS链路规则时，需要将链路生成隐藏置为false
+      web-context-unify: false
+      filter:
+        #只对/v1的接口生效
+        url-patterns:
+          - /v1/**
+          - /v2/**
+          - /sys/**
+
+    gateway:
+      httpclient:
+        connect-timeout: 2000
+        response-timeout: 10s
+#      使用nacos discovery实现，会从nacos中自动进行服务发现
+#      discovery:
+#        locator:
+#          enabled: true
+#          lower-case-service-id: true
+      routes:
+        - id: auth
+          uri: lb://provider-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            # http://localhost:2100/auth/** 将该请求路由到对应的服务中 ↓
+            # http://localhost:2101/auth/** 路由到auth服务中后，需调整为http://localhost:2101/**才可正常请求，所以需要去掉前缀 ↓
+            - StripPrefix=1
+        - id: base
+          uri: lb://provider-base
+          predicates:
+            - Path=/base/**
+          filters:
+            - StripPrefix=1
+        - id: quartz
+          uri: lb://provider-quartz
+          predicates:
+            - Path=/quartz/**
+          filters:
+            - StripPrefix=1
+
+logging:
+  config: classpath:log4j2-local.xml

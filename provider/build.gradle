@@ -1,0 +1,29 @@
+dependencies {
+    api project(":spring-cloud-openFeign-starter")
+    api project(":spring-cloud-sentinel-starter")
+    api project(":spring-cloud-provider-starter")
+    api project(":commons:commons-web")
+    api project(":commons:commons-core")
+    api project(":spring-cloud-third-starter:mybatis-plus-enhance")
+    api project(":spring-boot-starter:spring-boot-redisson-starter")
+    api project(":spring-boot-starter:spring-boot-cache-starter")
+
+    //结合使用openfeign时 服务使用loadbalancer
+    api "org.springframework.cloud:spring-cloud-starter-loadbalancer"
+    //使用控制台持久化到nacos时使用
+    api "com.alibaba.csp:sentinel-datasource-nacos"
+    //seata依赖 其中包含mvc依赖,不可引用到网关
+    api "com.alibaba.cloud:spring-cloud-starter-alibaba-seata"
+    api "io.seata:seata-spring-boot-starter"
+    //数据库
+    api "com.baomidou:mybatis-plus-boot-starter"
+    api "org.springframework.boot:spring-boot-starter-jdbc"
+    api "mysql:mysql-connector-java"
+    api "p6spy:p6spy"
+    //使用undertow替换Tomcat starter-web中内嵌 Servlet 容器（如 Tomcat、Undertow）
+    api "org.springframework.boot:spring-boot-starter-web"
+    api "org.springframework:spring-web"
+    api "org.springframework:spring-webmvc"
+    //springBoot缓存
+    api "org.springframework.boot:spring-boot-starter-cache"
+}

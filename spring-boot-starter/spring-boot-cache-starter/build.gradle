@@ -1,0 +1,13 @@
+dependencies {
+    compileOnly project(":spring-boot-starter:spring-boot-redisson-starter")
+    compileOnly project(":commons:commons-core")
+
+    compileOnly "com.github.ben-manes.caffeine:caffeine"
+    compileOnly "org.springframework.boot:spring-boot-autoconfigure"
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+    compileOnly "io.micrometer:micrometer-core"
+    compileOnly "org.springframework.boot:spring-boot-starter-actuator"
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+}

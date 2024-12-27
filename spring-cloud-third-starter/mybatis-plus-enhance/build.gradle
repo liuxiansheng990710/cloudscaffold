@@ -1,0 +1,8 @@
+dependencies {
+    compileOnly project(":commons:commons-core")
+
+    compileOnly "com.baomidou:mybatis-plus-boot-starter"
+    compileOnly "com.baomidou:dynamic-datasource-spring-boot-starter"
+    compileOnly "org.springframework.boot:spring-boot-starter-jdbc"
+    compileOnly "com.alibaba:fastjson"
+}

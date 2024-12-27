@@ -1,0 +1,9 @@
+checked-entities:
+  entity-path-patterns:
+    - classpath*:com/example/model/${module.name:*}/entity/mysql/*.class
+  db-types:
+    - mysql
+
+
+logging:
+  config: classpath:log4j2-local.xml

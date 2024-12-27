@@ -1,0 +1,7 @@
+datasource:
+  mysql:
+    jdbc-url: jdbc:p6spy:mysql://47.120.38.241:3306?tinyInt1isBit=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    username: 21
+    password: fuck_COM_520
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    max-pool-size: 5

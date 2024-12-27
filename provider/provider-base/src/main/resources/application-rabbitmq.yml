@@ -1,0 +1,37 @@
+spring:
+  cloud:
+    function:
+      # functionName对应服务中消费者的Bean
+      definition: 21-alpha-test;21-alpha-delay-test;
+    stream:
+      bindings:
+        21-alpha-test-in-0:
+          destination: test-topic
+          group: ${spring.application.name}
+          consumer:
+            max-attempts: 2
+        21-alpha-delay-test-in-0:
+          destination: delay-test-topic
+          group: ${spring.application.name}
+          consumer:
+            max-attempts: 1
+      rabbit:
+        bindings:
+          21-alpha-test-in-0:
+            consumer:
+              # 开启持久化
+              durable-subscription: true
+              # 自动绑定死信队列
+              auto-bind-dlq: true
+              # 死信队列添加错误信息
+              republish-to-dlq: true
+          21-alpha-delay-test-in-0:
+            consumer:
+              # 开启持久化
+              durable-subscription: true
+              # 自动绑定死信队列
+              auto-bind-dlq: true
+              # 死信队列添加错误信息
+              republish-to-dlq: true
+              # 延迟队列交换机
+              delayed-exchange: true

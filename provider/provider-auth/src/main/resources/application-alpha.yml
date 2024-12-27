@@ -1,0 +1,27 @@
+server:
+  undertow:
+    threads:
+      # IO线程数最大线程数（主要：接收/发送请求）, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个读线程和一个写线程
+      io: 5
+      # 工作线程池最大线程数 一般是io * 8（主要：处理请求、处理业务逻辑、生成响应）, 当执行类似servlet请求阻塞IO操作, undertow会从这个线程池中取得线程
+      worker: 40
+    buffer-size: 1024
+    # 是否分配的直接内存(NIO直接分配的堆外内存)，这里开启，所以java启动参数需要配置下直接内存大小，减少不必要的GC
+    # 在内存大于 128 MB 时，默认就是使用直接内存的
+    direct-buffers: true
+
+spring:
+  rabbitmq:
+    addresses: amqp://47.94.0.13:5672
+    username: 21
+    password: 21
+    virtual-host: vhost-alpha
+  datasource:
+    hikari:
+      #连接池的最大连接数 超过这个数量的连接将等待其他连接被释放
+      maximum-pool-size: 15
+      #连接池的最小空闲连接数 指定连接池中保持的最小空闲连接数，即使没有活动的连接需求，也要保持这些连接保持打开状态
+      minimum-idle: 5
+    url: jdbc:p6spy:mysql://47.120.38.241:3306/auth?tinyInt1isBit=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    username: 21
+    password: fuck_COM_520

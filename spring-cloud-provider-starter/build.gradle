@@ -1,0 +1,15 @@
+dependencies {
+    //因只需使用工具类，所以依赖不传递
+    compileOnly project(":commons:commons-core")
+    compileOnly project(":commons:commons-web")
+    compileOnly project(":spring-cloud-sentinel-starter")
+    compileOnly "org.springframework.boot:spring-boot-autoconfigure"
+    compileOnly "org.springframework.boot:spring-boot-starter-undertow"
+    compileOnly "org.springframework:spring-web"
+    compileOnly "org.springframework:spring-webmvc"
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+    compileOnly "org.springframework.boot:spring-boot-starter-log4j2"
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+}
